@@ -7,9 +7,10 @@
                  [yieldbot/marceline "0.2.1"]
                  [org.clojure/tools.cli "0.3.2"]
                  [org.apache.storm/storm-kafka "0.10.0.2.3.0.0-2557"
-                  :exclusions [org.slf4j/log4j-over-slf4j]]
+                  :exclusions [org.slf4j/slf4j-log4j12]]
                  [org.apache.kafka/kafka_2.10 "0.8.2.2.3.0.0-2557"
-                  :exclusions [org.slf4j/log4j-over-slf4j]]]
+                  :exclusions [org.slf4j/slf4j-log4j12]]
+                 [log4j/log4j "1.2.17"]]
   :source-paths ["src/clojure"]
   :java-source-paths ["src/java"]
   :main storetxns.core

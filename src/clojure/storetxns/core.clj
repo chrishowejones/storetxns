@@ -1,13 +1,16 @@
 (ns storetxns.core
   (:gen-class)
   (:require [clojure.string :as str]
-            [clojure.tools.cli :refer [parse-opts]]
             [storetxns.persist-txns :refer [mk-fixed-batch-spout kafka-spout build-topology]])
   (:import [backtype.storm LocalCluster StormSubmitter]))
 
 (def config
   {:topic "devcycle123"
    :kafka {:zookeeper "localhost:2181"}})
+
+(def remote-config
+  {:topic "devcycle123"
+   :kafka {:zookeeper "hostgroupmaster1-3-lloyds-20150923072909"}})
 
 (defn run-local! []
   (let [cluster (LocalCluster.)
@@ -18,20 +21,15 @@
   (Thread/sleep 5000)
   "completed")
 
-(defn run-remote! []
-  ())
-
-(defn submit-topology! [env]
+(defn submit-topology! []
   (let [name "storetxns"
         conf {}
-        spout (doto (mk-fixed-batch-spout 3)
-                (.setCycle true))]
+        spout (kafka-spout remote-config "txnspout")]
     (StormSubmitter/submitTopology
      name
      conf
-     (.build (build-topology
-              spout
-              nil)))))
+     (build-topology
+      spout))))
 
 (def ^:private app-specs [["-h" "--help" "Print this help"]
                 ["-r" "--remote" "Submit the topology to a remote cluster"]])
@@ -51,10 +49,9 @@
 (defn -main
   "Run the topology in local or remote mode - defaults to local"
   [& args]
-  (let [{:keys [options args errors summary]} (parse-opts args app-specs)]
-    (if (:remote options)
-       (run-remote!)
-       (run-local!))))
+  (if (= "remote" (first args))
+    (submit-topology!)
+    (run-local!)))
 
 
 (comment
