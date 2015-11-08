@@ -1,5 +1,6 @@
 (ns storetxns.persist-txns
   (:require [marceline.storm.trident :as t]
+            [marceline.storm.builtin :refer [filter-null]]
             [cheshire.core :refer [parse-string]])
   (:import [storm.trident TridentTopology]
            [storm.kafka ZkHosts StringScheme]
@@ -51,5 +52,6 @@
   (let [trident-topology (TridentTopology.)]
     (-> (t/new-stream trident-topology "storeTxns" spout)
         (t/each [txnmessage] txn-msg->tuple ["accnum" "balance" "amount" "txn-type"])
+        (t/each ["accnum"] (filter-null))
         (t/debug))
     (.build trident-topology)))
