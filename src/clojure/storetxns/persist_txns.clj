@@ -41,8 +41,11 @@
 (t/deftridentfn txn-msg->tuple
   [tuple coll]
   (when-let [message (t/get tuple txnmessage)]
-    (let [{:keys [accnum balance amount txn-type]} (parse-string message true)]
-     (t/emit-fn coll accnum balance amount txn-type))))
+    (try
+     (let [{:keys [accnum balance amount txn-type]} (parse-string message true)]
+       (t/emit-fn coll accnum balance amount txn-type))
+     (catch com.fasterxml.jackson.core.JsonParseException ex
+         (t/emit-fn coll nil nil nil nil)))))
 
 (defn build-topology [spout]
   (let [trident-topology (TridentTopology.)]
