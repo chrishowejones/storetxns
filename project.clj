@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [yieldbot/marceline "0.2.1"]
-                 [org.clojure/tools.cli "0.3.2"]
+                 [cheshire "5.5.0"]
                  [org.apache.storm/storm-kafka "0.10.0.2.3.0.0-2557"
                   :exclusions [org.slf4j/slf4j-log4j12]]
                  [org.apache.kafka/kafka_2.10 "0.8.2.2.3.0.0-2557"

@@ -31,21 +31,6 @@
      (build-topology
       spout))))
 
-(def ^:private app-specs [["-h" "--help" "Print this help"]
-                ["-r" "--remote" "Submit the topology to a remote cluster"]])
-
-(defn- usage [options-summary]
-  (->> ["This topology reads transaction messages from a Kafka topic."
-        ""
-        "Usage: storm jar storetxns.jar [options]"
-        ""
-        "Options:"
-        options-summary]
-       (str/join \newline)))
-
-(defn output-help [summary]
-  (println (usage summary)))
-
 (defn -main
   "Run the topology in local or remote mode - defaults to local"
   [& args]
@@ -56,7 +41,7 @@
 
 (comment
   ;; kafka spout
-  (kafka-spout config "txnspout")
+(kafka-spout config "txnspout")
 
   ;; fixed batch spout
   (doto (mk-fixed-batch-spout 3)
